@@ -99,7 +99,8 @@ def create_subitem(parent_item_id: str, subitem_name: str, column_values: dict =
         parent_item_id: $parent_item_id
         item_name: $item_name
         column_values: $column_values
-      ) { id }
+        create_labels_if_missing: true
+      ) { id board { id } }
     }
     """
     import json
@@ -129,6 +130,26 @@ def get_subitems(parent_item_id: str) -> list:
     if not items:
         return []
     return items[0].get("subitems", [])
+
+
+def update_item_column_values(item_id: str, column_values: dict, board_id: str = None) -> str:
+    """Update column values on an existing item or sub-item."""
+    import json
+    gql = """
+    mutation ($item_id: ID!, $board_id: ID!, $column_values: JSON!) {
+      change_multiple_column_values(
+        item_id: $item_id
+        board_id: $board_id
+        column_values: $column_values
+      ) { id }
+    }
+    """
+    data = query(gql, {
+        "item_id": item_id,
+        "board_id": board_id or os.environ.get("SPRINT_BOARD_ID"),
+        "column_values": json.dumps(column_values)
+    })
+    return data["change_multiple_column_values"]["id"]
 
 
 def get_users(name_filter: str = None) -> list:
