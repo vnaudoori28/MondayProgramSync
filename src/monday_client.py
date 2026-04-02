@@ -130,6 +130,28 @@ def get_subitems(parent_item_id: str) -> list:
     return items[0].get("subitems", [])
 
 
+def assign_person_to_item(item_id: str, board_id: str, user_id: str):
+    """Assign a person to an item using the correct mutation for people columns."""
+    gql = """
+    mutation ($item_id: ID!, $board_id: ID!, $user_id: String!) {
+      change_column_value(
+        item_id: $item_id
+        board_id: $board_id
+        column_id: "person"
+        value: $user_id
+      ) { id }
+    }
+    """
+    import json
+    user_value = json.dumps({"personsAndTeams": [{"id": int(user_id), "kind": "person"}]})
+    data = query(gql, {
+        "item_id": item_id,
+        "board_id": board_id,
+        "user_id": user_value
+    })
+    return data["change_column_value"]["id"]
+
+
 def update_item_column_values(item_id: str, column_values: dict, board_id: str = None) -> str:
     """Update column values on an existing item or sub-item."""
     import json
