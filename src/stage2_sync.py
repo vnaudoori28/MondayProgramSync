@@ -44,7 +44,7 @@ def get_active_categories(item_column_values: list[dict]) -> list[str]:
         for col in item_column_values:
             col_id = col.get("id", "").lower()
             col_text = col.get("text", "") or ""
-            if keyword in col_id and ACTIVE_CHECK(col_text):
+            if keyword == col_id and ACTIVE_CHECK(col_text):
                 active.append(category)
                 break
     return active
