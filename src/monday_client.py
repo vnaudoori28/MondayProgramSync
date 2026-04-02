@@ -91,35 +91,33 @@ def create_item(board_id: str, group_id: str, item_name: str, column_values: dic
     return data["create_item"]["id"]
 
 
-def create_subitem(parent_item_id: str, subitem_name: str, column_values: dict = None) -> str:
-    """Create a sub-item under a parent item. Returns the new sub-item's ID."""
+def create_subitem(parent_item_id: str, subitem_name: str) -> tuple[str, str]:
+    """Create a sub-item under a parent item. Returns (subitem_id, subitem_board_id)."""
     gql = """
-    mutation ($parent_item_id: ID!, $item_name: String!, $column_values: JSON) {
+    mutation ($parent_item_id: ID!, $item_name: String!) {
       create_subitem(
         parent_item_id: $parent_item_id
         item_name: $item_name
-        column_values: $column_values
-        create_labels_if_missing: true
       ) { id board { id } }
     }
     """
-    import json
     data = query(gql, {
         "parent_item_id": parent_item_id,
         "item_name": subitem_name,
-        "column_values": json.dumps(column_values) if column_values else "{}"
     })
-    return data["create_subitem"]["id"]
+    subitem = data["create_subitem"]
+    return subitem["id"], subitem["board"]["id"]
 
 
 def get_subitems(parent_item_id: str) -> list:
-    """Fetch all sub-items for a given parent item."""
+    """Fetch all sub-items for a given parent item, including their board ID."""
     gql = """
     query ($item_id: ID!) {
       items(ids: [$item_id]) {
         subitems {
           id
           name
+          board { id }
           column_values { id text value }
         }
       }
