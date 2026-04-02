@@ -60,6 +60,17 @@ def record_push(program_item_id: str, sprint_item_id: str, categories: list[str]
     save_state(state)
 
 
+def remove_categories(program_item_id: str, categories: list[str]):
+    """Remove specific categories from pushed state so they get re-pushed next run."""
+    state = load_state()
+    key = str(program_item_id)
+    if key not in state:
+        return
+    existing = set(state[key].get("pushed_categories", []))
+    state[key]["pushed_categories"] = sorted(existing - set(categories))
+    save_state(state)
+
+
 def is_program_known(program_item_id: str) -> bool:
     state = load_state()
     return str(program_item_id) in state
