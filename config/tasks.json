@@ -8,7 +8,7 @@
     "rule_format": "ANCHOR+days or ANCHOR-days. e.g. C+1 = 1 day after confirmation, P-15 = 15 days before program start"
   },
   "Hotels": {
-    "monday_column_keyword": "Hotels",
+    "monday_column_keyword": "status",
     "tasks": [
       {
         "name": "Block and sign contracts with chosen hotels and procure invoices with payment details",
@@ -33,7 +33,7 @@
     ]
   },
   "Flights": {
-    "monday_column_keyword": "Flights",
+    "monday_column_keyword": "status0",
     "tasks": [
       {
         "name": "Confirm preferred flight/train option with client",
@@ -53,7 +53,7 @@
     ]
   },
   "Trains": {
-    "monday_column_keyword": "Trains",
+    "monday_column_keyword": "trains",
     "tasks": [
       {
         "name": "Confirm preferred train option with client",
@@ -73,7 +73,7 @@
     ]
   },
   "Guides": {
-    "monday_column_keyword": "Guides",
+    "monday_column_keyword": "status3",
     "tasks": [
       {
         "name": "Book dates of preferred guides (Directly or with DMC)",
@@ -98,7 +98,7 @@
     ]
   },
   "Transport": {
-    "monday_column_keyword": "Transport",
+    "monday_column_keyword": "status4",
     "tasks": [
       {
         "name": "PLACEHOLDER: Confirm ground transport requirements with client",
@@ -113,7 +113,7 @@
     ]
   },
   "Meals": {
-    "monday_column_keyword": "Meals",
+    "monday_column_keyword": "status7",
     "tasks": [
       {
         "name": "PLACEHOLDER: Collect dietary requirements from participants",
@@ -128,7 +128,7 @@
     ]
   },
   "Visits": {
-    "monday_column_keyword": "Visits",
+    "monday_column_keyword": "status6",
     "tasks": [
       {
         "name": "PLACEHOLDER: Confirm visit locations with client",
@@ -143,7 +143,7 @@
     ]
   },
   "Meetings": {
-    "monday_column_keyword": "Meeting",
+    "monday_column_keyword": "status75",
     "tasks": [
       {
         "name": "PLACEHOLDER: Confirm meeting schedule and speakers with client",
