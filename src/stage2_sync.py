@@ -81,7 +81,7 @@ def push_categories_for_program(
     sprint_board_id: str,
     sprint_group_id: str,
     categories_to_push: list[str],
-    program_dates: dict,
+    program_s: dict,
     user_cache: dict,
     dry_run: bool = False
 ) -> str:
@@ -122,7 +122,7 @@ def push_categories_for_program(
 
             column_values = {}
             if due_date:
-                column_values["date4"] = {"date": due_date}  # update column ID as needed
+                column_values["Due Date"] = {"date": due_date}  # update column ID as needed
 
             owner_name = task.get("owner", "")
             if not owner_name:
@@ -131,7 +131,7 @@ def push_categories_for_program(
 
             owner_id = get_or_resolve_owner_id(owner_name, user_cache)
             if owner_id:
-                column_values["person"] = {"personsAndTeams": [{"id": owner_id, "kind": "person"}]}
+                column_values["Owner"] = {"personsAndTeams": [{"id": owner_id, "kind": "person"}]}
 
             print(f"    + {subitem_name[:80]} | due: {due_date}")
             if not dry_run:
