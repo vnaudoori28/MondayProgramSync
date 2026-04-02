@@ -1,0 +1,73 @@
+name: Program Tracker Sync
+
+on:
+  schedule:
+    # Runs daily at 8:00 AM IST (2:30 AM UTC)
+    - cron: "30 2 * * *"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Dry run (preview only, no writes to Monday)"
+        required: false
+        default: "false"
+        type: choice
+        options:
+          - "false"
+          - "true"
+      reset_item_id:
+        description: "Optional: Program item ID to reset state for before syncing"
+        required: false
+        default: ""
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Restore pushed state
+        uses: actions/cache@v4
+        with:
+          path: state/pushed_state.json
+          key: pushed-state-${{ github.run_id }}
+          restore-keys: |
+            pushed-state-
+
+      - name: Reset state for specific program (optional)
+        if: ${{ github.event.inputs.reset_item_id != '' }}
+        env:
+          MONDAY_API_TOKEN: ${{ secrets.MONDAY_API_TOKEN }}
+          TRACKER_BOARD_ID: ${{ secrets.TRACKER_BOARD_ID }}
+          SPRINT_BOARD_ID: ${{ secrets.SPRINT_BOARD_ID }}
+          SPRINT_GROUP_ID: ${{ secrets.SPRINT_GROUP_ID }}
+        run: python src/main.py --reset ${{ github.event.inputs.reset_item_id }}
+
+      - name: Run sync
+        env:
+          MONDAY_API_TOKEN: ${{ secrets.MONDAY_API_TOKEN }}
+          TRACKER_BOARD_ID: ${{ secrets.TRACKER_BOARD_ID }}
+          SPRINT_BOARD_ID: ${{ secrets.SPRINT_BOARD_ID }}
+          SPRINT_GROUP_ID: ${{ secrets.SPRINT_GROUP_ID }}
+          DEFAULT_TASK_OWNER: ${{ secrets.DEFAULT_TASK_OWNER }}
+        run: |
+          if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then
+            python src/main.py --dry-run
+          else
+            python src/main.py
+          fi
+
+      - name: Save pushed state
+        uses: actions/cache/save@v4
+        if: always()
+        with:
+          path: state/pushed_state.json
+          key: pushed-state-${{ github.run_id }}

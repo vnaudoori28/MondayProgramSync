@@ -1,0 +1,160 @@
+{
+  "_legend": {
+    "R": "Date of receiving RFP",
+    "S": "Proposal submission date",
+    "C": "Date of confirmation from client",
+    "P": "Program start date",
+    "PE": "Program end date",
+    "rule_format": "ANCHOR+days or ANCHOR-days. e.g. C+1 = 1 day after confirmation, P-15 = 15 days before program start"
+  },
+  "Hotels": {
+    "monday_column_keyword": "Hotels",
+    "tasks": [
+      {
+        "name": "Block and sign contracts with chosen hotels and procure invoices with payment details",
+        "rule": "C+1",
+        "notes": "As per updated numbers received from the university"
+      },
+      {
+        "name": "Release block for other hotels across locations",
+        "rule": "C+1",
+        "notes": ""
+      },
+      {
+        "name": "Send advance to chosen hotels: CCA / bank transfer / outward remittance",
+        "rule": "C+30",
+        "notes": "Could vary"
+      },
+      {
+        "name": "Collect rooming list from client and send it to hotels",
+        "rule": "P-15",
+        "notes": ""
+      }
+    ]
+  },
+  "Flights": {
+    "monday_column_keyword": "Flights",
+    "tasks": [
+      {
+        "name": "Confirm preferred flight/train option with client",
+        "rule": "C+1",
+        "notes": "Could vary"
+      },
+      {
+        "name": "Collect participant information / passport scans",
+        "rule": "C+7",
+        "notes": "Could vary"
+      },
+      {
+        "name": "Book tickets (either with vendor or directly online) and share tickets with university",
+        "rule": "C+15",
+        "notes": "Could vary"
+      }
+    ]
+  },
+  "Trains": {
+    "monday_column_keyword": "Trains",
+    "tasks": [
+      {
+        "name": "Confirm preferred train option with client",
+        "rule": "C+1",
+        "notes": "Could vary"
+      },
+      {
+        "name": "Collect participant information / passport scans",
+        "rule": "C+7",
+        "notes": "Could vary"
+      },
+      {
+        "name": "Book tickets (either with vendor or directly online) and share tickets with university",
+        "rule": "C+15",
+        "notes": "Could vary"
+      }
+    ]
+  },
+  "Guides": {
+    "monday_column_keyword": "Guides",
+    "tasks": [
+      {
+        "name": "Book dates of preferred guides (Directly or with DMC)",
+        "rule": "C+1",
+        "notes": ""
+      },
+      {
+        "name": "Send draft itinerary to guides/DMC along with the academic objective briefing",
+        "rule": "P-30",
+        "notes": ""
+      },
+      {
+        "name": "Send final itinerary / checklist and PAX info to guides",
+        "rule": "P-7",
+        "notes": "Could vary"
+      },
+      {
+        "name": "Send advance for entrance fees etc.",
+        "rule": "P-7",
+        "notes": ""
+      }
+    ]
+  },
+  "Transport": {
+    "monday_column_keyword": "Transport",
+    "tasks": [
+      {
+        "name": "PLACEHOLDER: Confirm ground transport requirements with client",
+        "rule": "C+1",
+        "notes": "Placeholder — update with actual tasks"
+      },
+      {
+        "name": "PLACEHOLDER: Book transport vendor and share itinerary",
+        "rule": "P-14",
+        "notes": "Placeholder — update with actual tasks"
+      }
+    ]
+  },
+  "Meals": {
+    "monday_column_keyword": "Meals",
+    "tasks": [
+      {
+        "name": "PLACEHOLDER: Collect dietary requirements from participants",
+        "rule": "C+7",
+        "notes": "Placeholder — update with actual tasks"
+      },
+      {
+        "name": "PLACEHOLDER: Confirm meal plan and share with venues",
+        "rule": "P-14",
+        "notes": "Placeholder — update with actual tasks"
+      }
+    ]
+  },
+  "Visits": {
+    "monday_column_keyword": "Visits",
+    "tasks": [
+      {
+        "name": "PLACEHOLDER: Confirm visit locations with client",
+        "rule": "C+1",
+        "notes": "Placeholder — update with actual tasks"
+      },
+      {
+        "name": "PLACEHOLDER: Book entry / tickets for visit locations",
+        "rule": "P-21",
+        "notes": "Placeholder — update with actual tasks"
+      }
+    ]
+  },
+  "Meetings": {
+    "monday_column_keyword": "Meeting",
+    "tasks": [
+      {
+        "name": "PLACEHOLDER: Confirm meeting schedule and speakers with client",
+        "rule": "C+7",
+        "notes": "Placeholder — update with actual tasks"
+      },
+      {
+        "name": "PLACEHOLDER: Send confirmed meeting agenda to all parties",
+        "rule": "P-7",
+        "notes": "Placeholder — update with actual tasks"
+      }
+    ]
+  }
+}
