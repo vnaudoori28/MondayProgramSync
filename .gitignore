@@ -3,3 +3,6 @@ state/pushed_state.json
 __pycache__/
 *.pyc
 .DS_Store
+
+# Keep the template but allow teams to gitignore real program files if needed
+# To ignore specific programs: add programs/2026-10_India_Pilot/ here

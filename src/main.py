@@ -55,11 +55,13 @@ def cmd_sync(dry_run: bool):
     tracker_board_id = require_env("TRACKER_BOARD_ID")
     sprint_board_id  = require_env("SPRINT_BOARD_ID")
     sprint_group_id  = require_env("SPRINT_GROUP_ID")
+    programs_dir     = os.environ.get("PROGRAMS_DIR", "programs")
 
     sync_program_tracker(
         tracker_board_id=tracker_board_id,
         sprint_board_id=sprint_board_id,
         sprint_group_id=sprint_group_id,
+        programs_dir=programs_dir,
         dry_run=dry_run
     )
 

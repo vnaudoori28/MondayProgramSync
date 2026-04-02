@@ -77,37 +77,60 @@ def calculate_all_task_dates(tasks: list[dict], program_dates: dict) -> list[dic
     return result
 
 
-def extract_program_dates_from_item(column_values: list[dict]) -> dict:
+def read_legend_from_excel(excel_path: str) -> dict:
     """
-    Extract program date anchors from a Monday item's column values.
-    Looks for columns whose title/id contains known keywords.
+    Read anchor dates from the Legend sheet of a program Excel file.
 
-    Returns a dict with keys matching ANCHOR_SYMBOLS values.
-    Extend the COLUMN_KEYWORDS map below as your board evolves.
-    """
-    COLUMN_KEYWORDS = {
-        "confirmation_date": ["confirmation", "confirmed", "go-ahead", "go ahead"],
-        "program_start_date": ["program start", "program date", "start date", "departure"],
-        "program_end_date": ["program end", "end date", "return date"],
-        "rfp_date": ["rfp", "rfp date", "received rfp"],
-        "submission_date": ["submission", "proposal date"],
+    Expects rows like:
+        Symbol | Meaning | Date | Notes | Milestone
+        R      | ...     | 2025-08-01 | ...
+        C      | ...     | 2025-09-01 | ...
+        P      | ...     | 2025-12-01 | ...
+
+    Returns a dict with keys matching ANCHOR_SYMBOLS values, e.g.:
+    {
+        "rfp_date": date(2025, 8, 1),
+        "confirmation_date": date(2025, 9, 1),
+        "program_start_date": date(2025, 12, 1),
+        ...
     }
+    """
+    try:
+        import pandas as pd
+    except ImportError:
+        raise ImportError("pandas is required to read Excel files: pip install pandas openpyxl")
+
+    df = pd.read_excel(excel_path, sheet_name="Legend", header=None)
 
     dates = {}
-    for col in column_values:
-        col_id_lower = col.get("id", "").lower()
-        col_text = col.get("text", "") or ""
+    for _, row in df.iterrows():
+        symbol = str(row[0]).strip() if pd.notna(row[0]) else ""
+        raw_date = row[2] if len(row) > 2 else None
 
-        for anchor_key, keywords in COLUMN_KEYWORDS.items():
-            if anchor_key in dates:
-                continue
-            if any(kw in col_id_lower for kw in keywords):
-                if col_text:
-                    try:
-                        # Monday returns dates as YYYY-MM-DD
-                        from datetime import date as dt
-                        dates[anchor_key] = dt.fromisoformat(col_text[:10])
-                    except ValueError:
-                        pass
+        if symbol not in ANCHOR_SYMBOLS:
+            continue
+        if pd.isna(raw_date):
+            continue
+
+        anchor_key = ANCHOR_SYMBOLS[symbol]
+        try:
+            if hasattr(raw_date, "date"):
+                # pandas Timestamp
+                dates[anchor_key] = raw_date.date()
+            else:
+                dates[anchor_key] = date.fromisoformat(str(raw_date)[:10])
+        except (ValueError, TypeError):
+            print(f"  [warn] Could not parse date for symbol '{symbol}': {raw_date}")
 
     return dates
+
+
+def get_program_name_from_excel(excel_path: str) -> str:
+    """Read the program name from the Legend sheet (row 0, col 1)."""
+    try:
+        import pandas as pd
+        df = pd.read_excel(excel_path, sheet_name="Legend", header=None)
+        name = str(df.iloc[0, 1]).strip()
+        return name if name and name != "nan" else ""
+    except Exception:
+        return ""

@@ -15,7 +15,7 @@ from datetime import date
 
 import monday_client as mc
 import state_manager as sm
-from date_calculator import calculate_all_task_dates, extract_program_dates_from_item
+from date_calculator import calculate_all_task_dates, read_legend_from_excel, get_program_name_from_excel
 
 TASKS_CONFIG = json.load(open(
     os.path.join(os.path.dirname(__file__), "..", "config", "tasks.json")
@@ -81,7 +81,7 @@ def push_categories_for_program(
     sprint_board_id: str,
     sprint_group_id: str,
     categories_to_push: list[str],
-    program_s: dict,
+    program_dates: dict,
     user_cache: dict,
     dry_run: bool = False
 ) -> str:
@@ -122,7 +122,7 @@ def push_categories_for_program(
 
             column_values = {}
             if due_date:
-                column_values["Due Date"] = {"date": due_date}  # update column ID as needed
+                column_values["date4"] = {"date": due_date}  # update column ID as needed
 
             owner_name = task.get("owner", "")
             if not owner_name:
@@ -131,7 +131,7 @@ def push_categories_for_program(
 
             owner_id = get_or_resolve_owner_id(owner_name, user_cache)
             if owner_id:
-                column_values["Owner"] = {"personsAndTeams": [{"id": owner_id, "kind": "person"}]}
+                column_values["person"] = {"personsAndTeams": [{"id": owner_id, "kind": "person"}]}
 
             print(f"    + {subitem_name[:80]} | due: {due_date}")
             if not dry_run:
@@ -149,15 +149,57 @@ def push_categories_for_program(
     return sprint_item_id
 
 
+def find_excel_for_program(program_name: str, programs_dir: str) -> str | None:
+    """
+    Look for a program.xlsx inside programs/<folder> where the folder name or
+    the Excel's own program name matches the Monday item name.
+    Returns the full path to the Excel file, or None if not found.
+    """
+    from pathlib import Path
+    programs_path = Path(programs_dir)
+    if not programs_path.exists():
+        return None
+
+    for folder in sorted(programs_path.iterdir()):
+        if not folder.is_dir():
+            continue
+        excel = folder / "program.xlsx"
+        if not excel.exists():
+            continue
+
+        # Match by folder name (case-insensitive substring)
+        if program_name.lower() in folder.name.lower() or folder.name.lower() in program_name.lower():
+            return str(excel)
+
+        # Match by program name stored inside the Excel legend
+        excel_program_name = get_program_name_from_excel(str(excel))
+        if excel_program_name and (
+            program_name.lower() in excel_program_name.lower() or
+            excel_program_name.lower() in program_name.lower()
+        ):
+            return str(excel)
+
+    return None
+
+
 def sync_program_tracker(
     tracker_board_id: str,
     sprint_board_id: str,
     sprint_group_id: str,
+    programs_dir: str,
     dry_run: bool = False
 ):
     """
     Main sync function. Reads all items from Program Tracker,
+    matches each to a program Excel file in programs_dir,
     finds newly active categories, and pushes tasks to Sprint Board.
+
+    programs_dir structure:
+        programs/
+            2026-10_India_Pilot/
+                program.xlsx    ← PM fills in Legend dates at kickoff
+            2026-11_Singapore/
+                program.xlsx
     """
     print(f"\n{'='*60}")
     print(f"Starting sync {'[DRY RUN] ' if dry_run else ''}— {date.today()}")
@@ -165,10 +207,9 @@ def sync_program_tracker(
 
     print("Fetching Program Tracker items...")
     items = mc.get_board_items(tracker_board_id)
-    print(f"Found {len(items)} programs\n")
+    print(f"Found {len(items)} programs in tracker\n")
 
     user_cache = build_user_cache()
-
     total_new = 0
 
     for item in items:
@@ -178,23 +219,35 @@ def sync_program_tracker(
 
         active_categories = get_active_categories(col_values)
         if not active_categories:
+            print(f"[skip] {item_name} — no active categories")
             continue
 
         already_pushed = sm.get_pushed_categories(item_id)
         new_categories = [c for c in active_categories if c not in already_pushed]
 
         if not new_categories:
-            print(f"[skip] {item_name} — no new categories (already pushed: {already_pushed})")
+            print(f"[skip] {item_name} — no new categories (pushed: {already_pushed})")
             continue
 
         print(f"\n[sync] {item_name}")
-        print(f"  Active categories:  {active_categories}")
-        print(f"  Already pushed:     {already_pushed}")
-        print(f"  New to push:        {new_categories}")
+        print(f"  Active:      {active_categories}")
+        print(f"  Already done:{already_pushed}")
+        print(f"  Pushing now: {new_categories}")
 
-        program_dates = extract_program_dates_from_item(col_values)
+        # Find the Excel file for this program
+        excel_path = find_excel_for_program(item_name, programs_dir)
+        if not excel_path:
+            print(f"  [skip] No program.xlsx found in {programs_dir} for '{item_name}'")
+            print(f"         Create: programs/<folder-matching-program-name>/program.xlsx")
+            continue
+
+        print(f"  Excel: {excel_path}")
+        program_dates = read_legend_from_excel(excel_path)
+
         if not program_dates:
-            print(f"  [warn] No date columns found for {item_name} — due dates will be empty")
+            print(f"  [warn] No dates found in Legend sheet — due dates will be empty")
+        else:
+            print(f"  Dates loaded: {list(program_dates.keys())}")
 
         push_categories_for_program(
             program_item_id=item_id,
