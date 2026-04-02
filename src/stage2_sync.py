@@ -70,7 +70,7 @@ def build_column_values(due_date: str | None, owner_id: str | None) -> dict:
     if due_date:
         col[COL_DUE_DATE] = {"date": due_date}
     if owner_id:
-        col[COL_OWNER] = {"personsAndTeams": [{"id": owner_id, "kind": "person"}]}
+        col[COL_OWNER] = {"personsAndTeams": [{"id": int(owner_id), "kind": "person"}]}
     return col
 
 
