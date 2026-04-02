@@ -187,6 +187,30 @@ def sync_program(
     already_pushed = sm.get_pushed_categories(program_item_id)
     new_categories = [c for c in active_categories if c not in already_pushed]
 
+    # Self-healing: verify sub-tasks actually exist in Monday
+    # If state says "pushed" but sub-tasks are missing, re-push those categories
+    if already_pushed and sprint_item_id:
+        try:
+            existing = mc.get_subitems(sprint_item_id)
+            existing_names = {sub["name"] for sub in existing}
+            missing_categories = []
+            for category in already_pushed:
+                config = TASKS_CONFIG.get(category)
+                if not config:
+                    continue
+                expected = [build_subitem_name(category, t["name"]) for t in config["tasks"]]
+                if not any(name in existing_names for name in expected):
+                    missing_categories.append(category)
+            if missing_categories:
+                print(f"  [heal] Sub-tasks missing in Monday for: {missing_categories} — will re-push")
+                new_categories = list(set(new_categories + missing_categories))
+                # Remove from state so they get re-recorded cleanly
+                if not dry_run:
+                    sm.remove_categories(program_item_id, missing_categories)
+                    already_pushed = sm.get_pushed_categories(program_item_id)
+        except Exception as e:
+            print(f"  [warn] Could not verify existing sub-tasks: {e}")
+
     print(f"\n[sync] {program_name}")
     print(f"  Active:       {active_categories}")
     print(f"  Already done: {already_pushed}")
