@@ -122,7 +122,7 @@ def push_categories_for_program(
 
             column_values = {}
             if due_date:
-                column_values["Due Date"] = {"date": due_date}  # update column ID as needed
+                column_values["date0"] = {"date": due_date}  # update column ID as needed
 
             owner_name = task.get("owner", "")
             if not owner_name:
