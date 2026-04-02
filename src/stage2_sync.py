@@ -69,8 +69,6 @@ def build_column_values(due_date: str | None, owner_id: str | None) -> dict:
     col = {}
     if due_date:
         col[COL_DUE_DATE] = {"date": due_date}
-    if owner_id:
-        col[COL_OWNER] = {"personsAndTeams": [{"id": int(owner_id), "kind": "person"}]}
     return col
 
 
@@ -106,13 +104,15 @@ def patch_existing_subitems(
                 continue
 
             due_date = task.get("due_date")
-            col = build_column_values(due_date, owner_id)
-            if not col:
-                continue
-
             print(f"    ~ patch: {name[:70]} | due: {due_date}")
             if not dry_run:
-                mc.update_item_column_values(subitem["id"], col, board_id=subitem["board_id"])
+                if due_date:
+                    mc.update_item_column_values(subitem["id"], {COL_DUE_DATE: {"date": due_date}}, board_id=subitem["board_id"])
+                if owner_id:
+                    try:
+                        mc.assign_person_to_item(subitem["id"], subitem["board_id"], owner_id)
+                    except Exception as e:
+                        print(f"      [warn] Could not assign owner: {e}")
             patched += 1
 
     print(f"  Patched {patched} existing sub-tasks")
@@ -158,14 +158,18 @@ def push_new_subitems(
 
             print(f"    + {name[:70]} | due: {due_date}")
             if not dry_run:
-                # Step 1: create sub-item, get back id + board_id
                 new_id, subitem_board_id = mc.create_subitem(
                     parent_item_id=sprint_item_id,
                     subitem_name=name
                 )
-                # Step 2: patch columns using the subitem's own board_id
-                if col and new_id:
-                    mc.update_item_column_values(new_id, col, board_id=subitem_board_id)
+                if new_id:
+                    if due_date:
+                        mc.update_item_column_values(new_id, {COL_DUE_DATE: {"date": due_date}}, board_id=subitem_board_id)
+                    if owner_id:
+                        try:
+                            mc.assign_person_to_item(new_id, subitem_board_id, owner_id)
+                        except Exception as e:
+                            print(f"      [warn] Could not assign owner: {e}")
             existing_names.add(name)
 
         pushed_categories.append(category)
