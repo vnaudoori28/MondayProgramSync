@@ -91,7 +91,7 @@ def patch_existing_subitems(
         print(f"  [warn] Could not fetch sub-tasks: {e}")
         return
 
-    existing_map = {sub["name"]: sub["id"] for sub in existing}
+    existing_map = {sub["name"]: {"id": sub["id"], "board_id": sub["board"]["id"]} for sub in existing}
     patched = 0
 
     for category in categories:
@@ -101,8 +101,8 @@ def patch_existing_subitems(
         tasks = calculate_all_task_dates(config["tasks"], program_dates)
         for task in tasks:
             name = build_subitem_name(category, task["name"])
-            subitem_id = existing_map.get(name)
-            if not subitem_id:
+            subitem = existing_map.get(name)
+            if not subitem:
                 continue
 
             due_date = task.get("due_date")
@@ -112,7 +112,7 @@ def patch_existing_subitems(
 
             print(f"    ~ patch: {name[:70]} | due: {due_date}")
             if not dry_run:
-                mc.update_item_column_values(subitem_id, col)
+                mc.update_item_column_values(subitem["id"], col, board_id=subitem["board_id"])
             patched += 1
 
     print(f"  Patched {patched} existing sub-tasks")
@@ -158,14 +158,14 @@ def push_new_subitems(
 
             print(f"    + {name[:70]} | due: {due_date}")
             if not dry_run:
-                # Step 1: create sub-item (name only)
-                new_id = mc.create_subitem(
+                # Step 1: create sub-item, get back id + board_id
+                new_id, subitem_board_id = mc.create_subitem(
                     parent_item_id=sprint_item_id,
                     subitem_name=name
                 )
-                # Step 2: immediately patch columns (date + owner)
+                # Step 2: patch columns using the subitem's own board_id
                 if col and new_id:
-                    mc.update_item_column_values(new_id, col)
+                    mc.update_item_column_values(new_id, col, board_id=subitem_board_id)
             existing_names.add(name)
 
         pushed_categories.append(category)
