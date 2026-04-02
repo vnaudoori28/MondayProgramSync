@@ -33,7 +33,7 @@ def get_board_items(board_id: str) -> list:
             id
             name
             group { id title }
-            column_values { id text value }
+            column_values { id text value type }
           }
         }
       }

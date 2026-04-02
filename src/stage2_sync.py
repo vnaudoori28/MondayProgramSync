@@ -7,6 +7,11 @@ On every run:
     any missing or outdated due dates and owners (smart update)
   - For newly active categories: creates sub-tasks fresh
   - Never creates duplicates — matches by sub-task name before creating
+
+Column keyword types:
+  __always__       → always create tasks for this category (no status check)
+  color_*          → color column, active when value is not blank/none
+  anything else    → standard status column, active when text not in NA_VALUES
 """
 
 import json
@@ -22,26 +27,55 @@ TASKS_CONFIG = json.load(open(
 ))
 
 NA_VALUES = {"na", "n/a", "", "none"}
-ACTIVE_CHECK = lambda text: text.strip().lower() not in NA_VALUES if text else False
 
-# Sub-item column IDs (confirmed from your Sprint Board)
-COL_DUE_DATE = "date0"
+# Sub-item column IDs (confirmed from Sprint Board)
+COL_DUE_DATE  = "date0"
 COL_START_DATE = "date_mm1hwtgt"
-COL_OWNER = "person"
+COL_OWNER     = "person"
+
+
+def is_active(col: dict) -> bool:
+    """
+    Check if a column value means the category is active (not NA).
+    Handles standard status columns and color columns.
+    """
+    col_type = col.get("type", "")
+    text = (col.get("text") or "").strip()
+    value = col.get("value")
+
+    if col_type == "color":
+        # Color columns: active when value is not null/empty
+        return value is not None and value != "null" and value != ""
+    else:
+        # Standard status: active when text is not an NA value
+        return text.lower() not in NA_VALUES
 
 
 def get_active_categories(item_column_values: list[dict]) -> list[str]:
+    """
+    Return list of category names that are active for this program.
+    __always__ categories are always included.
+    """
     active = []
+
+    # Build a lookup of col_id -> column data from the item
+    col_lookup = {col.get("id", ""): col for col in item_column_values}
+
     for category, config in TASKS_CONFIG.items():
         if category.startswith("_"):
             continue
-        keyword = config.get("monday_column_keyword", category).lower()
-        for col in item_column_values:
-            col_id = col.get("id", "").lower()
-            col_text = col.get("text", "") or ""
-            if keyword == col_id and ACTIVE_CHECK(col_text):
-                active.append(category)
-                break
+        keyword = config.get("monday_column_keyword", "")
+
+        # Always-on categories
+        if keyword == "__always__":
+            active.append(category)
+            continue
+
+        # Status / color column check
+        col = col_lookup.get(keyword)
+        if col and is_active(col):
+            active.append(category)
+
     return active
 
 
@@ -65,7 +99,7 @@ def resolve_owner_id(user_cache: dict) -> str | None:
     return user_cache.get(owner_name.strip().lower())
 
 
-def build_column_values(due_date: str | None, owner_id: str | None) -> dict:
+def build_column_values(due_date: str | None) -> dict:
     col = {}
     if due_date:
         col[COL_DUE_DATE] = {"date": due_date}
@@ -79,9 +113,7 @@ def patch_existing_subitems(
     owner_id: str | None,
     dry_run: bool
 ):
-    """
-    Fetch existing sub-tasks, match by name, patch missing/changed due dates and owners.
-    """
+    """Fetch existing sub-tasks and patch missing/changed due dates and owners."""
     print(f"  Fetching existing sub-tasks for smart sync...")
     try:
         existing = mc.get_subitems(sprint_item_id)
@@ -102,12 +134,16 @@ def patch_existing_subitems(
             subitem = existing_map.get(name)
             if not subitem:
                 continue
-
             due_date = task.get("due_date")
+            if not due_date:
+                continue
             print(f"    ~ patch: {name[:70]} | due: {due_date}")
             if not dry_run:
-                if due_date:
-                    mc.update_item_column_values(subitem["id"], {COL_DUE_DATE: {"date": due_date}}, board_id=subitem["board_id"])
+                mc.update_item_column_values(
+                    subitem["id"],
+                    {COL_DUE_DATE: {"date": due_date}},
+                    board_id=subitem["board_id"]
+                )
                 if owner_id:
                     try:
                         mc.assign_person_to_item(subitem["id"], subitem["board_id"], owner_id)
@@ -125,10 +161,7 @@ def push_new_subitems(
     owner_id: str | None,
     dry_run: bool
 ) -> list[str]:
-    """
-    Create sub-tasks for each category, skipping any that already exist by name.
-    Returns list of categories successfully pushed.
-    """
+    """Create sub-tasks for each category, skipping duplicates by name."""
     print(f"  Fetching existing sub-tasks to check for duplicates...")
     try:
         existing = mc.get_subitems(sprint_item_id)
@@ -154,9 +187,8 @@ def push_new_subitems(
                 continue
 
             due_date = task.get("due_date")
-            col = build_column_values(due_date, owner_id)
-
             print(f"    + {name[:70]} | due: {due_date}")
+
             if not dry_run:
                 new_id, subitem_board_id = mc.create_subitem(
                     parent_item_id=sprint_item_id,
@@ -164,7 +196,11 @@ def push_new_subitems(
                 )
                 if new_id:
                     if due_date:
-                        mc.update_item_column_values(new_id, {COL_DUE_DATE: {"date": due_date}}, board_id=subitem_board_id)
+                        mc.update_item_column_values(
+                            new_id,
+                            {COL_DUE_DATE: {"date": due_date}},
+                            board_id=subitem_board_id
+                        )
                     if owner_id:
                         try:
                             mc.assign_person_to_item(new_id, subitem_board_id, owner_id)
@@ -192,7 +228,6 @@ def sync_program(
     new_categories = [c for c in active_categories if c not in already_pushed]
 
     # Self-healing: verify sub-tasks actually exist in Monday
-    # If state says "pushed" but sub-tasks are missing, re-push those categories
     if already_pushed and sprint_item_id:
         try:
             existing = mc.get_subitems(sprint_item_id)
@@ -206,9 +241,8 @@ def sync_program(
                 if not any(name in existing_names for name in expected):
                     missing_categories.append(category)
             if missing_categories:
-                print(f"  [heal] Sub-tasks missing in Monday for: {missing_categories} — will re-push")
+                print(f"  [heal] Sub-tasks missing for: {missing_categories} — will re-push")
                 new_categories = list(set(new_categories + missing_categories))
-                # Remove from state so they get re-recorded cleanly
                 if not dry_run:
                     sm.remove_categories(program_item_id, missing_categories)
                     already_pushed = sm.get_pushed_categories(program_item_id)
@@ -222,7 +256,7 @@ def sync_program(
 
     owner_id = resolve_owner_id(user_cache)
 
-    # Create parent sprint item if it doesn't exist yet
+    # Create parent sprint item if not yet created
     if not sprint_item_id:
         print(f"  Creating sprint item...")
         if not dry_run:
@@ -300,7 +334,7 @@ def sync_program_tracker(
     user_cache = build_user_cache()
 
     for item in items:
-        item_id = item["id"]
+        item_id   = item["id"]
         item_name = item["name"]
         col_values = item["column_values"]
 
@@ -311,7 +345,7 @@ def sync_program_tracker(
 
         excel_path = find_excel_for_program(item_name, programs_dir)
         if not excel_path:
-            print(f"[skip] {item_name} — no program.xlsx found in {programs_dir}")
+            print(f"[skip] {item_name} — no program.xlsx found")
             print(f"       Create: programs/<folder-matching-program-name>/program.xlsx")
             continue
 
