@@ -60,6 +60,15 @@ def record_push(program_item_id: str, sprint_item_id: str, categories: list[str]
     save_state(state)
 
 
+def full_reset(program_item_id: str):
+    """Completely remove all state for a program — sprint_item_id and categories."""
+    state = load_state()
+    key = str(program_item_id)
+    if key in state:
+        del state[key]
+    save_state(state)
+
+
 def remove_categories(program_item_id: str, categories: list[str]):
     """Remove specific categories from pushed state so they get re-pushed next run."""
     state = load_state()
