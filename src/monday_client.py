@@ -152,6 +152,26 @@ def assign_person_to_item(item_id: str, board_id: str, user_id: str):
     return data["change_column_value"]["id"]
 
 
+def item_exists(item_id: str) -> bool:
+    """Check if an item exists and is active in Monday."""
+    gql = """
+    query ($item_id: ID!) {
+      items(ids: [$item_id]) {
+        id
+        state
+      }
+    }
+    """
+    try:
+        data = query(gql, {"item_id": item_id})
+        items = data.get("items", [])
+        if not items:
+            return False
+        return items[0].get("state", "") == "active"
+    except Exception:
+        return False
+
+
 def update_item_column_values(item_id: str, column_values: dict, board_id: str = None) -> str:
     """Update column values on an existing item or sub-item."""
     import json
