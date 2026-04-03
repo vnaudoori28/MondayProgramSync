@@ -7,23 +7,388 @@
     "PE": "Program end date",
     "rule_format": "ANCHOR+days or ANCHOR-days. e.g. C+1 = 1 day after confirmation, P-15 = 15 days before program start"
   },
-  "Hotels": {
-    "monday_column_keyword": "status",
+  "General - Proposals": {
+    "monday_column_keyword": "__general__",
     "tasks": [
       {
-        "name": "Block and sign contracts with chosen hotels and procure invoices with payment details",
-        "rule": "C+1",
-        "notes": "As per updated numbers received from the university"
+        "name": "Ensure sales hand-off template is filled; clarify doubts, if any before working on the proposal",
+        "rule": "R",
+        "notes": ""
       },
       {
-        "name": "Release block for other hotels across locations",
+        "name": "Use itinerary elements template to detail out the requirements",
+        "rule": "R+1",
+        "notes": ""
+      },
+      {
+        "name": "Use vendor template to reach out to DMCs etc.",
+        "rule": "R+1",
+        "notes": ""
+      },
+      {
+        "name": "Decide FOC etc. terms with hotels",
+        "rule": "R+7",
+        "notes": ""
+      },
+      {
+        "name": "Use hotel options, dining options etc. templates to save all information",
+        "rule": "R+7",
+        "notes": ""
+      },
+      {
+        "name": "Document all vendor service limitations and requirements",
+        "rule": "R+7",
+        "notes": "NEW: Capture luggage transfer limits, group size restrictions, etc."
+      },
+      {
+        "name": "Verify accommodation standards meet university requirements (private bathrooms, accessibility)",
+        "rule": "R+7",
+        "notes": "NEW: Based on Cats Hostel Madrid issue"
+      },
+      {
+        "name": "Complete work on costing sheet and proposal formats",
+        "rule": "R+7",
+        "notes": ""
+      },
+      {
+        "name": "Include detailed transportation requirements template (airport transfers, public transit specifications)",
+        "rule": "S-1",
+        "notes": "NEW: Based on Barcelona transit confusion"
+      },
+      {
+        "name": "Do a thorough proof-reading and cross-checking (with help from another team member)",
+        "rule": "S-1",
+        "notes": ""
+      },
+      {
+        "name": "Ensure block on all hotels and important resources while sending proposals",
+        "rule": "S",
+        "notes": "ensure payments & cancellation are on agreeable terms"
+      },
+      {
+        "name": "Followup with client on the proposal status",
+        "rule": "S+15",
+        "notes": "could vary"
+      },
+      {
+        "name": "Get quotes from DMCs/hotels for program dates",
+        "rule": "R+1",
+        "notes": "Using vendor templates"
+      },
+      {
+        "name": "Finalize hotel options for the proposal",
+        "rule": "R+7",
+        "notes": "Using hotel sheet template"
+      },
+      {
+        "name": "Complete and review the costing sheet and proposal",
+        "rule": "R+7",
+        "notes": "Use formats"
+      },
+      {
+        "name": "Block all proposed hotels and guides",
+        "rule": "S",
+        "notes": "ensure payments & cancellation are on agreeable terms"
+      },
+      {
+        "name": "Followup with client/sales on the proposal status to release or keep the blocks",
+        "rule": "S+15",
+        "notes": "Proposal confirmation timeline could vary"
+      }
+    ]
+  },
+  "General - Post Confirmation": {
+    "monday_column_keyword": "__general__",
+    "tasks": [
+      {
+        "name": "Send advance invoice",
+        "rule": "P-90",
+        "notes": ""
+      },
+      {
+        "name": "Create mastersheet and fill up all tabs with information till date",
         "rule": "C+1",
         "notes": ""
       },
       {
+        "name": "Implement triple verification system for all bookings",
+        "rule": "C+3",
+        "notes": "ENHANCED: Real-time tracking"
+      },
+      {
+        "name": "Set up Monday.com collaboration board with university stakeholders",
+        "rule": "C+3",
+        "notes": "ENHANCED: Real-time tracking"
+      },
+      {
+        "name": "Create and share googlesheets to collect information from client",
+        "rule": "C+7",
+        "notes": ""
+      },
+      {
+        "name": "Prepare orientation ppt / other such information (e.g. language workshop, empathy workshop etc.)",
+        "rule": "P-30",
+        "notes": ""
+      },
+      {
+        "name": "Send balance invoice",
+        "rule": "P-30",
+        "notes": ""
+      },
+      {
+        "name": "Update emergency action plan for the program",
+        "rule": "P-30",
+        "notes": ""
+      },
+      {
+        "name": "Establish clear protocols for mid-program change requests",
+        "rule": "P-30",
+        "notes": "NEW: Based on OSU budget change requests"
+      },
+      {
+        "name": "Create and share pre-dep information / dossier",
+        "rule": "P-30",
+        "notes": ""
+      },
+      {
+        "name": "Include comprehensive service limitations in student materials",
+        "rule": "P-30",
+        "notes": "ENHANCED: Luggage specs, transit rules"
+      },
+      {
+        "name": "Create checklist for delivery",
+        "rule": "P-15",
+        "notes": ""
+      },
+      {
+        "name": "Continue updating mastersheet on regular basis",
+        "rule": "P-7",
+        "notes": ""
+      },
+      {
+        "name": "Create documentation and communication plan",
+        "rule": "P-7",
+        "notes": ""
+      },
+      {
+        "name": "Plan and prepare first aid kits and other relevant material specific to programs",
+        "rule": "P-7",
+        "notes": ""
+      },
+      {
+        "name": "Print checklists and relevant documents",
+        "rule": "P-15",
+        "notes": ""
+      },
+      {
+        "name": "Note any additional expenses beyond what we have invoiced for",
+        "rule": "P",
+        "notes": "sometimes things are added even before program"
+      },
+      {
+        "name": "Send payment links to individuals for single supp/extra nights/activities (e.g. baseball match) etc.",
+        "rule": "P",
+        "notes": "time-frame could vary"
+      },
+      {
+        "name": "Send invoice to client for additional expenses",
+        "rule": "P+7",
+        "notes": "Enter Program end date + 7 days"
+      },
+      {
+        "name": "Send thank you notes to partner organizations / companies",
+        "rule": "P+7",
+        "notes": "Send thank you notes on the same day of the visit (could vary based on the work load)"
+      },
+      {
+        "name": "Sign contracts with hotels and DMCs",
+        "rule": "P-90",
+        "notes": "timeframe could vary"
+      },
+      {
+        "name": "Followup with client/sales on program confirmation date",
+        "rule": "P-90",
+        "notes": "timeframe could vary"
+      },
+      {
+        "name": "Send deposit invoice to university",
+        "rule": "P-90",
+        "notes": "Check proposal terms and conditions"
+      },
+      {
+        "name": "Create mastersheet",
+        "rule": "C+1",
+        "notes": "Use template and fill information on an on-going basis"
+      },
+      {
+        "name": "Set up Monday.com/google sheet for collaboration with all university stakeholders",
+        "rule": "C+3",
+        "notes": "ENHANCED: Real-time tracking"
+      },
+      {
+        "name": "Share participant data template to collect information (including scanned passport copies)",
+        "rule": "C+7",
+        "notes": "Use participant data template #to client"
+      },
+      {
+        "name": "Prepare for in-person/online program orientation and safety briefing",
+        "rule": "P-30",
+        "notes": "Refer to India orientation PPT"
+      },
+      {
+        "name": "Send balance invoice to university",
+        "rule": "P-30",
+        "notes": ""
+      },
+      {
+        "name": "Create and share pre-departure guide",
+        "rule": "P-30",
+        "notes": "Refer to standard pre dep template"
+      },
+      {
+        "name": "Send post program invoice to the university",
+        "rule": "P+7",
+        "notes": "Enter Program end date + 7 days"
+      }
+    ]
+  },
+  "General - Pre Departure": {
+    "monday_column_keyword": "__general__",
+    "tasks": [
+      {
+        "name": "Mandatory vendor service specification documentation",
+        "rule": "C+45",
+        "notes": "NEW: All limitations documented"
+      },
+      {
+        "name": "Local partner certification training completion",
+        "rule": "C+45",
+        "notes": "NEW: University program standards"
+      },
+      {
+        "name": "Accessibility assessment for all activities and routes",
+        "rule": "C+40",
+        "notes": "NEW: San Sebastian route equity issue"
+      },
+      {
+        "name": "Weather contingency planning for all group activities",
+        "rule": "C+35",
+        "notes": "NEW: San Sebastian dinner issue"
+      },
+      {
+        "name": "Restaurant proximity verification (max 10min walk from accommodations)",
+        "rule": "C+35",
+        "notes": "NEW: Spain group dinner locations"
+      },
+      {
+        "name": "Complete program orientation for guides and local partners",
+        "rule": "C+45",
+        "notes": "Brief them about Authentica standards"
+      }
+    ]
+  },
+  "General - Verification": {
+    "monday_column_keyword": "__general__",
+    "tasks": [
+      {
+        "name": "First verification: All bookings confirmed with vendors",
+        "rule": "P-15",
+        "notes": "NEW: Screenshot confirmations required"
+      },
+      {
+        "name": "Second verification: Room counts, amenity specifications",
+        "rule": "P-7",
+        "notes": "NEW: Private bathroom verification"
+      },
+      {
+        "name": "Third verification: Final headcount updates to all vendors",
+        "rule": "P-2",
+        "notes": "NEW: Prevent overbooking issues"
+      },
+      {
+        "name": "Pre-program vendor briefing calls (hotels, transport, guides)",
+        "rule": "P-2",
+        "notes": "NEW: 72-hour advance coordination"
+      },
+      {
+        "name": "Transit pass delivery confirmation (24hrs before first use)",
+        "rule": "P-2",
+        "notes": "NEW: San Sebastian dinner issue prevention"
+      },
+      {
+        "name": "Driver briefing with printed itineraries in local language",
+        "rule": "P-2",
+        "notes": "NEW: Spain bus coordination issue"
+      },
+      {
+        "name": "Verify pre-program delivery checklist",
+        "rule": "P-7",
+        "notes": "Refer template"
+      }
+    ]
+  },
+  "Hotels": {
+    "monday_column_keyword": "status",
+    "tasks": [
+      {
+        "name": "Confirm room requirement and configurations from client",
+        "rule": "C+7",
+        "notes": "sometimes this gets modified later"
+      },
+      {
+        "name": "Re-confirm block for chosen hotels across locations (refer notes)",
+        "rule": "C+1",
+        "notes": "this could involve contracting"
+      },
+      {
+        "name": "Release block for other hotels across locations",
+        "rule": "C+7",
+        "notes": ""
+      },
+      {
+        "name": "Sign contracts with chosen hotels and procure invoices with payment details",
+        "rule": "C+30",
+        "notes": "hotel's contract format"
+      },
+      {
         "name": "Send advance to chosen hotels: CCA / bank transfer / outward remittance",
         "rule": "C+30",
-        "notes": "Could vary"
+        "notes": "could vary"
+      },
+      {
+        "name": "Collect rooming list from client",
+        "rule": "P-15",
+        "notes": ""
+      },
+      {
+        "name": "Final enrollment number update to all vendors",
+        "rule": "P-15",
+        "notes": "NEW: Tsukuba hotel room issue prevention"
+      },
+      {
+        "name": "Send rooming list to hotels",
+        "rule": "P-7",
+        "notes": ""
+      },
+      {
+        "name": "Ensure rooms are allocated as per requirement",
+        "rule": "P-1",
+        "notes": ""
+      },
+      {
+        "name": "Sort out any issues with the rooms in discussion with the duty manager",
+        "rule": "P",
+        "notes": ""
+      },
+      {
+        "name": "Settle balance payments within",
+        "rule": "P+7",
+        "notes": "Program end date"
+      },
+      {
+        "name": "Block and sign contracts with chosen hotels and procure invoices with payment details",
+        "rule": "C+1",
+        "notes": "As per updated numbers received from the university"
       },
       {
         "name": "Collect rooming list from client and send it to hotels",
@@ -38,43 +403,73 @@
       {
         "name": "Confirm preferred flight/train option with client",
         "rule": "C+1",
-        "notes": "Could vary"
+        "notes": "could vary"
       },
       {
-        "name": "Collect participant information / passport scans",
-        "rule": "C+7",
-        "notes": "Could vary"
-      },
-      {
-        "name": "Book tickets (either with vendor or directly online) and share tickets with university",
-        "rule": "C+15",
-        "notes": "Could vary"
-      }
-    ]
-  },
-  "Trains": {
-    "monday_column_keyword": "trains",
-    "tasks": [
-      {
-        "name": "Confirm preferred train option with client",
+        "name": "Decide whether you would approach some vendor or book online directly",
         "rule": "C+1",
-        "notes": "Could vary"
+        "notes": "could vary"
       },
       {
         "name": "Collect participant information / passport scans",
         "rule": "C+7",
-        "notes": "Could vary"
+        "notes": "could vary"
+      },
+      {
+        "name": "Book flights/trains",
+        "rule": "C+15",
+        "notes": "could vary"
+      },
+      {
+        "name": "Share tickets with client",
+        "rule": "P-30",
+        "notes": ""
       },
       {
         "name": "Book tickets (either with vendor or directly online) and share tickets with university",
         "rule": "C+15",
-        "notes": "Could vary"
+        "notes": "could vary"
       }
     ]
   },
   "Guides": {
     "monday_column_keyword": "status3",
     "tasks": [
+      {
+        "name": "Re-confirm block for chosen guides",
+        "rule": "C+1",
+        "notes": ""
+      },
+      {
+        "name": "Send draft itinerary to guides",
+        "rule": "P-30",
+        "notes": ""
+      },
+      {
+        "name": "Academic objectives briefing with all guides and vendors",
+        "rule": "P-15",
+        "notes": "NEW: Spain tour guide role clarification"
+      },
+      {
+        "name": "Send final itinerary / checklist and PAX info to guides",
+        "rule": "P-7",
+        "notes": "could vary"
+      },
+      {
+        "name": "Send advance for entrance fees etc.",
+        "rule": "P-1",
+        "notes": ""
+      },
+      {
+        "name": "Be in touch on a daily basis to ensure things are going as per plan / discuss necessary modifications",
+        "rule": "P",
+        "notes": ""
+      },
+      {
+        "name": "Settle accounts",
+        "rule": "P+7",
+        "notes": ""
+      },
       {
         "name": "Book dates of preferred guides (Directly or with DMC)",
         "rule": "C+1",
@@ -84,15 +479,60 @@
         "name": "Send draft itinerary to guides/DMC along with the academic objective briefing",
         "rule": "P-30",
         "notes": ""
+      }
+    ]
+  },
+  "Meetings": {
+    "monday_column_keyword": "status75",
+    "tasks": [
+      {
+        "name": "Re-confirm exact requirement from client (preferred venue location, purpose of meeting, group size, AV requirement, F&B etc.)",
+        "rule": "C+1",
+        "notes": ""
       },
       {
-        "name": "Send final itinerary / checklist and PAX info to guides",
-        "rule": "P-7",
-        "notes": "Could vary"
+        "name": "Identify venue as per requirement (if not done at proposal stage)",
+        "rule": "C+7",
+        "notes": ""
       },
       {
-        "name": "Send advance for entrance fees etc.",
+        "name": "Finalize venue and block",
+        "rule": "C+15",
+        "notes": ""
+      },
+      {
+        "name": "Pay advance, if needed",
+        "rule": "P-30",
+        "notes": "could vary"
+      },
+      {
+        "name": "Re-confirm exact AV etc. requirement from client",
+        "rule": "P-15",
+        "notes": ""
+      },
+      {
+        "name": "Share AV etc. requirement details to vendor",
         "rule": "P-7",
+        "notes": ""
+      },
+      {
+        "name": "Re-confirm all arrangements",
+        "rule": "P-1",
+        "notes": ""
+      },
+      {
+        "name": "Confirm exact requirement from client (preferred venue location, purpose of meeting, group size, AV requirement, F&B etc.)",
+        "rule": "C+1",
+        "notes": ""
+      },
+      {
+        "name": "Identify, block and finalize venue",
+        "rule": "C+15",
+        "notes": ""
+      },
+      {
+        "name": "Re-confirm exact requirements from university and share it with vendors",
+        "rule": "P-15",
         "notes": ""
       }
     ]
@@ -101,14 +541,79 @@
     "monday_column_keyword": "status4",
     "tasks": [
       {
-        "name": "PLACEHOLDER: Confirm ground transport requirements with client",
-        "rule": "C+1",
-        "notes": "Placeholder — update with actual tasks"
+        "name": "Confirm requirement for each destination / specific visits or requirements (e.g. seatbelts, wheelchair acess etc.)",
+        "rule": "R+1",
+        "notes": ""
       },
       {
-        "name": "PLACEHOLDER: Book transport vendor and share itinerary",
-        "rule": "P-14",
-        "notes": "Placeholder — update with actual tasks"
+        "name": "Contact DMC / local transport vendor with the requirement",
+        "rule": "R+1",
+        "notes": ""
+      },
+      {
+        "name": "Block chosen vehicles",
+        "rule": "C+15",
+        "notes": ""
+      },
+      {
+        "name": "Send tentative itinerary to check about routes, timings or any specific requirements/issues",
+        "rule": "P-30",
+        "notes": ""
+      },
+      {
+        "name": "Send reminder about flight details to cient",
+        "rule": "P-30",
+        "notes": ""
+      },
+      {
+        "name": "Receive arrival and departure details from client",
+        "rule": "P-15",
+        "notes": ""
+      },
+      {
+        "name": "Send updated itinerary and placard",
+        "rule": "P-7",
+        "notes": "Asian DMCs require this earlier"
+      },
+      {
+        "name": "Get driver details and confirm he has correct placard and itinerary",
+        "rule": "P-1",
+        "notes": ""
+      },
+      {
+        "name": "Ensure driver knows the route / addresses and ensure tips are paid at the end",
+        "rule": "P",
+        "notes": "to be done a day in advance"
+      },
+      {
+        "name": "Ensure tips are paid to each driver on the last day / EOD",
+        "rule": "P",
+        "notes": ""
+      },
+      {
+        "name": "Settle accounts with the transport vendor after checking their invoice",
+        "rule": "P+7",
+        "notes": "if any discrepancy, get it sorted"
+      },
+      {
+        "name": "Confirm requirement for each destination / specific visits or requirements (e.g. seatbelts, wheelchair acess etc.) and share with vendors/DMC",
+        "rule": "C",
+        "notes": ""
+      },
+      {
+        "name": "Send transport/DMC itinerary to check about routes, timings or any specific requirements/issues",
+        "rule": "P-30",
+        "notes": ""
+      },
+      {
+        "name": "Share arrival and departure schedule to university and share it with vendors/DMC",
+        "rule": "P-15",
+        "notes": "As per the mastersheet template"
+      },
+      {
+        "name": "Send final itinerary and placard",
+        "rule": "P-7",
+        "notes": "Asian DMCs require this earlier"
       }
     ]
   },
@@ -116,44 +621,269 @@
     "monday_column_keyword": "status7",
     "tasks": [
       {
-        "name": "PLACEHOLDER: Collect dietary requirements from participants",
+        "name": "Confirm meal requirements to be included",
+        "rule": "C",
+        "notes": ""
+      },
+      {
+        "name": "Research appropriate options in each destination (if not done already)",
         "rule": "C+7",
-        "notes": "Placeholder — update with actual tasks"
+        "notes": "sometimes we have specific seating requirement"
       },
       {
-        "name": "PLACEHOLDER: Confirm meal plan and share with venues",
-        "rule": "P-14",
-        "notes": "Placeholder — update with actual tasks"
-      }
-    ]
-  },
-  "Visits": {
-    "monday_column_keyword": "status6",
-    "tasks": [
-      {
-        "name": "PLACEHOLDER: Confirm visit locations with client",
-        "rule": "C+1",
-        "notes": "Placeholder — update with actual tasks"
+        "name": "Contact shortlisted venues to get availability, rates and menu details",
+        "rule": "C+15",
+        "notes": ""
       },
       {
-        "name": "PLACEHOLDER: Book entry / tickets for visit locations",
-        "rule": "P-21",
-        "notes": "Placeholder — update with actual tasks"
-      }
-    ]
-  },
-  "Meetings": {
-    "monday_column_keyword": "status75",
-    "tasks": [
-      {
-        "name": "PLACEHOLDER: Confirm meeting schedule and speakers with client",
-        "rule": "C+7",
-        "notes": "Placeholder — update with actual tasks"
+        "name": "Finalilze and block chosen venues",
+        "rule": "C+30",
+        "notes": "sometimes client approval is needed"
       },
       {
-        "name": "PLACEHOLDER: Send confirmed meeting agenda to all parties",
+        "name": "Pay advance, if needed",
+        "rule": "P-30",
+        "notes": ""
+      },
+      {
+        "name": "Send dietary restrictions",
+        "rule": "P-15",
+        "notes": ""
+      },
+      {
+        "name": "Finalize menu with dietary restrictions",
         "rule": "P-7",
-        "notes": "Placeholder — update with actual tasks"
+        "notes": "sometimes client approval is needed"
+      },
+      {
+        "name": "Reconfirm seating and menu",
+        "rule": "P-1",
+        "notes": ""
+      },
+      {
+        "name": "Balance payment",
+        "rule": "P",
+        "notes": ""
+      }
+    ]
+  },
+  "Immersions": {
+    "monday_column_keyword": "status1",
+    "tasks": [
+      {
+        "name": "Confirm criteria for immersions in each location",
+        "rule": "C",
+        "notes": ""
+      },
+      {
+        "name": "Research appropriate options in each destination (if not done already)",
+        "rule": "C+7",
+        "notes": "sometimes we have specific seating requirement"
+      },
+      {
+        "name": "Contact shortlisted options to get availability, rates and activity details",
+        "rule": "C+15",
+        "notes": ""
+      },
+      {
+        "name": "Finalilze and block chosen options with any specific instruction (e.g. specific guides, atomic bomb survivor etc.)",
+        "rule": "C+30",
+        "notes": "sometimes client approval is needed"
+      },
+      {
+        "name": "Pay advance, if needed",
+        "rule": "P-30",
+        "notes": ""
+      },
+      {
+        "name": "Send/collect required info (e.g. PAX details)",
+        "rule": "P-7",
+        "notes": "time-frame could vary"
+      },
+      {
+        "name": "Reconfirm all arrangements",
+        "rule": "P-1",
+        "notes": ""
+      },
+      {
+        "name": "Balance payment, if relevant",
+        "rule": "P",
+        "notes": ""
+      }
+    ]
+  },
+  "Org Visits": {
+    "monday_column_keyword": "company_visits",
+    "tasks": [
+      {
+        "name": "Identify ideal org visits in each destination",
+        "rule": "C+15",
+        "notes": ""
+      },
+      {
+        "name": "Ensure relevant team members reach out to the point of contact",
+        "rule": "C+30",
+        "notes": "could continue over months"
+      },
+      {
+        "name": "Collect relevant info to be shared (e.g. bio book) from client",
+        "rule": "P-30",
+        "notes": ""
+      },
+      {
+        "name": "Finalize visits in discussion with the client",
+        "rule": "P-30",
+        "notes": ""
+      },
+      {
+        "name": "Get logistical contact at each org",
+        "rule": "P-30",
+        "notes": ""
+      },
+      {
+        "name": "Send / collect relevant info (address, timings, entry/security procedure etc.)",
+        "rule": "P-15",
+        "notes": ""
+      },
+      {
+        "name": "Reconfirm visit",
+        "rule": "P-15",
+        "notes": ""
+      },
+      {
+        "name": "Ensure group reaches 10 mins. before meeting time and driver is ready at the end of the meeting",
+        "rule": "P",
+        "notes": ""
+      },
+      {
+        "name": "Give gifts to our contacts",
+        "rule": "P",
+        "notes": ""
+      },
+      {
+        "name": "Send thank you notes to org contacts",
+        "rule": "P",
+        "notes": "within 24 hours of visit"
+      },
+      {
+        "name": "Collect feedback, if relevant",
+        "rule": "P+7",
+        "notes": ""
+      },
+      {
+        "name": "Brief PDs/Content partners regarding program theme and requirements",
+        "rule": "C+15",
+        "notes": ""
+      },
+      {
+        "name": "Finalize visits in discussion with the client and PDs",
+        "rule": "P-30",
+        "notes": ""
+      },
+      {
+        "name": "Get logistical contacts from PDs at for each visit",
+        "rule": "P-30",
+        "notes": ""
+      },
+      {
+        "name": "Co-ordinate with organizations about the visit (timings, address, meals, security protocols like passports, roster sheet, license plate)",
+        "rule": "P-15",
+        "notes": ""
+      },
+      {
+        "name": "Plan and procure gifts for organization visits",
+        "rule": "P-30",
+        "notes": ""
+      }
+    ]
+  },
+  "Projects": {
+    "monday_column_keyword": "company_visits",
+    "tasks": [
+      {
+        "name": "Confirm criteria for projects",
+        "rule": "C",
+        "notes": ""
+      },
+      {
+        "name": "Identify relevant orgs and contact them with a template email with requirements",
+        "rule": "C+15",
+        "notes": ""
+      },
+      {
+        "name": "Shortlist relevant / interested orgs and share their details to the client",
+        "rule": "C+30",
+        "notes": "this might take longer"
+      },
+      {
+        "name": "Discuss project scope and help orgs draft project description",
+        "rule": "P-60",
+        "notes": "time-frame could vary"
+      },
+      {
+        "name": "Finalize project description and share with client",
+        "rule": "P-30",
+        "notes": "time-frame could vary"
+      },
+      {
+        "name": "Ensure org is ready to host group",
+        "rule": "P-15",
+        "notes": ""
+      },
+      {
+        "name": "Send/collect relevant info and share with group (address, timings, specific procedure for first day etc.)",
+        "rule": "P-7",
+        "notes": ""
+      },
+      {
+        "name": "Reconfirm all arrangements",
+        "rule": "P-1",
+        "notes": ""
+      },
+      {
+        "name": "Accompany group to org location and ensure they are well settled",
+        "rule": "P",
+        "notes": ""
+      },
+      {
+        "name": "Be in touch with the group and org throughout the program",
+        "rule": "P",
+        "notes": ""
+      },
+      {
+        "name": "Collect feedback",
+        "rule": "P+7",
+        "notes": ""
+      }
+    ]
+  },
+  "General - Post Program": {
+    "monday_column_keyword": "__general__",
+    "tasks": [
+      {
+        "name": "Immediate debrief with all stakeholders within 48 hours",
+        "rule": "P+15",
+        "notes": "NEW: Rapid issue identification"
+      },
+      {
+        "name": "Service failure compensation processing",
+        "rule": "P+15",
+        "notes": "NEW: Proactive client relations"
+      },
+      {
+        "name": "Local partner performance evaluation",
+        "rule": "P+15",
+        "notes": "NEW: Continuous improvement"
+      },
+      {
+        "name": "Process improvement documentation",
+        "rule": "P+15",
+        "notes": "NEW: Learning integration"
+      },
+      {
+        "name": "Client satisfaction follow-up call",
+        "rule": "P+15",
+        "notes": "NEW: Relationship management"
       }
     ]
   }
