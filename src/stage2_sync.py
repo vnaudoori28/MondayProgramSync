@@ -294,25 +294,37 @@ def sync_program(
             sm.record_push(program_item_id, sprint_item_id, pushed)
 
 
+def normalise(s: str) -> str:
+    """Lowercase, replace underscores/hyphens with spaces, collapse whitespace."""
+    return " ".join(s.lower().replace("_", " ").replace("-", " ").split())
+
+
 def find_excel_for_program(program_name: str, programs_dir: str) -> str | None:
     from pathlib import Path
     programs_path = Path(programs_dir)
     if not programs_path.exists():
         return None
+    prog_norm = normalise(program_name)
     for folder in sorted(programs_path.iterdir()):
         if not folder.is_dir():
             continue
         excel = folder / "program.xlsx"
         if not excel.exists():
             continue
-        if program_name.lower() in folder.name.lower() or folder.name.lower() in program_name.lower():
+        folder_norm = normalise(folder.name)
+        if folder_norm in prog_norm or prog_norm in folder_norm:
+            return str(excel)
+        # Also check any word-level overlap (e.g. "india pilot 2" in "india pilot 2 program test2")
+        folder_words = set(folder_norm.split())
+        prog_words = set(prog_norm.split())
+        overlap = folder_words & prog_words - {"program", "test", "the", "a", "of"}
+        if len(overlap) >= 2:
             return str(excel)
         excel_program_name = get_program_name_from_excel(str(excel))
-        if excel_program_name and (
-            program_name.lower() in excel_program_name.lower() or
-            excel_program_name.lower() in program_name.lower()
-        ):
-            return str(excel)
+        if excel_program_name:
+            excel_norm = normalise(excel_program_name)
+            if excel_norm in prog_norm or prog_norm in excel_norm:
+                return str(excel)
     return None
 
 
