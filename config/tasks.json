@@ -7,8 +7,98 @@
     "PE": "Program end date",
     "rule_format": "ANCHOR+days or ANCHOR-days. e.g. C+1 = 1 day after confirmation, P-15 = 15 days before program start"
   },
+  "Planning": {
+    "monday_column_keyword": "__always__",
+    "tasks": [
+      {
+        "name": "Send deposit / advance invoice to university",
+        "rule": "P-90",
+        "notes": "Check proposal terms and conditions"
+      },
+      {
+        "name": "Create mastersheet and fill up all tabs with information till date",
+        "rule": "C+1",
+        "notes": "Use template"
+      },
+      {
+        "name": "Implement triple verification system for all bookings",
+        "rule": "C+3",
+        "notes": ""
+      },
+      {
+        "name": "Set up Monday.com / Google Sheet collaboration with university stakeholders",
+        "rule": "C+3",
+        "notes": ""
+      },
+      {
+        "name": "Share participant data template to collect information (including passport scans)",
+        "rule": "C+7",
+        "notes": ""
+      },
+      {
+        "name": "Prepare orientation PPT / safety briefing material",
+        "rule": "P-30",
+        "notes": ""
+      },
+      {
+        "name": "Send balance invoice to university",
+        "rule": "P-30",
+        "notes": ""
+      },
+      {
+        "name": "Update emergency action plan for the program",
+        "rule": "P-30",
+        "notes": ""
+      },
+      {
+        "name": "Create and share pre-departure guide / dossier",
+        "rule": "P-30",
+        "notes": "Refer to standard pre-dep template"
+      },
+      {
+        "name": "Establish clear protocols for mid-program change requests",
+        "rule": "P-30",
+        "notes": "Add to services agreement"
+      },
+      {
+        "name": "Create checklist for delivery",
+        "rule": "P-15",
+        "notes": "Refer mastersheet for template"
+      },
+      {
+        "name": "Print checklists and relevant documents",
+        "rule": "P-15",
+        "notes": ""
+      },
+      {
+        "name": "Continue updating mastersheet on regular basis",
+        "rule": "P-7",
+        "notes": ""
+      },
+      {
+        "name": "Create documentation and communication plan",
+        "rule": "P-7",
+        "notes": ""
+      },
+      {
+        "name": "Plan and prepare first aid kits and relevant material",
+        "rule": "P-7",
+        "notes": ""
+      },
+      {
+        "name": "Send post program invoice to the university",
+        "rule": "P+7",
+        "notes": "Program end date + 7 days"
+      },
+      {
+        "name": "Send thank you notes to partner organizations / companies",
+        "rule": "P+7",
+        "notes": ""
+      }
+    ]
+  },
   "General - Proposals": {
-    "monday_column_keyword": "__general__",
+    "monday_column_keyword": "__always__",
     "tasks": [
       {
         "name": "Ensure sales hand-off template is filled; clarify doubts, if any before working on the proposal",
@@ -97,163 +187,8 @@
       }
     ]
   },
-  "General - Post Confirmation": {
-    "monday_column_keyword": "__general__",
-    "tasks": [
-      {
-        "name": "Send advance invoice",
-        "rule": "P-90",
-        "notes": ""
-      },
-      {
-        "name": "Create mastersheet and fill up all tabs with information till date",
-        "rule": "C+1",
-        "notes": ""
-      },
-      {
-        "name": "Implement triple verification system for all bookings",
-        "rule": "C+3",
-        "notes": "ENHANCED: Real-time tracking"
-      },
-      {
-        "name": "Set up Monday.com collaboration board with university stakeholders",
-        "rule": "C+3",
-        "notes": "ENHANCED: Real-time tracking"
-      },
-      {
-        "name": "Create and share googlesheets to collect information from client",
-        "rule": "C+7",
-        "notes": ""
-      },
-      {
-        "name": "Prepare orientation ppt / other such information (e.g. language workshop, empathy workshop etc.)",
-        "rule": "P-30",
-        "notes": ""
-      },
-      {
-        "name": "Send balance invoice",
-        "rule": "P-30",
-        "notes": ""
-      },
-      {
-        "name": "Update emergency action plan for the program",
-        "rule": "P-30",
-        "notes": ""
-      },
-      {
-        "name": "Establish clear protocols for mid-program change requests",
-        "rule": "P-30",
-        "notes": "NEW: Based on OSU budget change requests"
-      },
-      {
-        "name": "Create and share pre-dep information / dossier",
-        "rule": "P-30",
-        "notes": ""
-      },
-      {
-        "name": "Include comprehensive service limitations in student materials",
-        "rule": "P-30",
-        "notes": "ENHANCED: Luggage specs, transit rules"
-      },
-      {
-        "name": "Create checklist for delivery",
-        "rule": "P-15",
-        "notes": ""
-      },
-      {
-        "name": "Continue updating mastersheet on regular basis",
-        "rule": "P-7",
-        "notes": ""
-      },
-      {
-        "name": "Create documentation and communication plan",
-        "rule": "P-7",
-        "notes": ""
-      },
-      {
-        "name": "Plan and prepare first aid kits and other relevant material specific to programs",
-        "rule": "P-7",
-        "notes": ""
-      },
-      {
-        "name": "Print checklists and relevant documents",
-        "rule": "P-15",
-        "notes": ""
-      },
-      {
-        "name": "Note any additional expenses beyond what we have invoiced for",
-        "rule": "P",
-        "notes": "sometimes things are added even before program"
-      },
-      {
-        "name": "Send payment links to individuals for single supp/extra nights/activities (e.g. baseball match) etc.",
-        "rule": "P",
-        "notes": "time-frame could vary"
-      },
-      {
-        "name": "Send invoice to client for additional expenses",
-        "rule": "P+7",
-        "notes": "Enter Program end date + 7 days"
-      },
-      {
-        "name": "Send thank you notes to partner organizations / companies",
-        "rule": "P+7",
-        "notes": "Send thank you notes on the same day of the visit (could vary based on the work load)"
-      },
-      {
-        "name": "Sign contracts with hotels and DMCs",
-        "rule": "P-90",
-        "notes": "timeframe could vary"
-      },
-      {
-        "name": "Followup with client/sales on program confirmation date",
-        "rule": "P-90",
-        "notes": "timeframe could vary"
-      },
-      {
-        "name": "Send deposit invoice to university",
-        "rule": "P-90",
-        "notes": "Check proposal terms and conditions"
-      },
-      {
-        "name": "Create mastersheet",
-        "rule": "C+1",
-        "notes": "Use template and fill information on an on-going basis"
-      },
-      {
-        "name": "Set up Monday.com/google sheet for collaboration with all university stakeholders",
-        "rule": "C+3",
-        "notes": "ENHANCED: Real-time tracking"
-      },
-      {
-        "name": "Share participant data template to collect information (including scanned passport copies)",
-        "rule": "C+7",
-        "notes": "Use participant data template #to client"
-      },
-      {
-        "name": "Prepare for in-person/online program orientation and safety briefing",
-        "rule": "P-30",
-        "notes": "Refer to India orientation PPT"
-      },
-      {
-        "name": "Send balance invoice to university",
-        "rule": "P-30",
-        "notes": ""
-      },
-      {
-        "name": "Create and share pre-departure guide",
-        "rule": "P-30",
-        "notes": "Refer to standard pre dep template"
-      },
-      {
-        "name": "Send post program invoice to the university",
-        "rule": "P+7",
-        "notes": "Enter Program end date + 7 days"
-      }
-    ]
-  },
   "General - Pre Departure": {
-    "monday_column_keyword": "__general__",
+    "monday_column_keyword": "color_mkxetqg",
     "tasks": [
       {
         "name": "Mandatory vendor service specification documentation",
@@ -288,7 +223,7 @@
     ]
   },
   "General - Verification": {
-    "monday_column_keyword": "__general__",
+    "monday_column_keyword": "__always__",
     "tasks": [
       {
         "name": "First verification: All bookings confirmed with vendors",
@@ -858,7 +793,7 @@
     ]
   },
   "General - Post Program": {
-    "monday_column_keyword": "__general__",
+    "monday_column_keyword": "dup__of_apm_bookings_mkkmwt4",
     "tasks": [
       {
         "name": "Immediate debrief with all stakeholders within 48 hours",
@@ -884,6 +819,31 @@
         "name": "Client satisfaction follow-up call",
         "rule": "P+15",
         "notes": "NEW: Relationship management"
+      }
+    ]
+  },
+  "Trains": {
+    "monday_column_keyword": "trains",
+    "tasks": [
+      {
+        "name": "Confirm preferred train option with client",
+        "rule": "C+1",
+        "notes": "could vary"
+      },
+      {
+        "name": "Collect participant information / passport scans",
+        "rule": "C+7",
+        "notes": "could vary"
+      },
+      {
+        "name": "Book tickets (either with vendor or directly online) and share tickets with university",
+        "rule": "C+15",
+        "notes": "could vary"
+      },
+      {
+        "name": "Share tickets with client",
+        "rule": "P-30",
+        "notes": ""
       }
     ]
   }
