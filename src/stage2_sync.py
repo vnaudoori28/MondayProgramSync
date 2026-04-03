@@ -226,16 +226,13 @@ def sync_program(
     sprint_item_id = sm.get_sprint_item_id(program_item_id)
     already_pushed = sm.get_pushed_categories(program_item_id)
 
-    # Validate sprint_item_id still exists in Monday
-    if sprint_item_id:
-        try:
-            existing = mc.get_subitems(sprint_item_id)
-        except Exception:
-            print(f"  [heal] Sprint item {sprint_item_id} no longer exists — will create fresh")
-            sprint_item_id = None
-            already_pushed = []
-            if not dry_run:
-                sm.full_reset(program_item_id)
+    # Validate sprint_item_id still exists and is active in Monday
+    if sprint_item_id and not mc.item_exists(sprint_item_id):
+        print(f"  [heal] Sprint item {sprint_item_id} no longer active — will create fresh")
+        sprint_item_id = None
+        already_pushed = []
+        if not dry_run:
+            sm.full_reset(program_item_id)
     new_categories = [c for c in active_categories if c not in already_pushed]
 
     # Self-healing: verify sub-tasks actually exist in Monday
