@@ -152,8 +152,11 @@ def assign_person_to_item(item_id: str, board_id: str, user_id: str):
     return data["change_column_value"]["id"]
 
 
-def item_exists(item_id: str) -> bool:
-    """Check if an item exists and is active in Monday."""
+def item_exists(item_id: str) -> bool | None:
+    """
+    Check if an item exists and is active in Monday.
+    Returns True if active, False if confirmed gone, None if check failed (API error etc).
+    """
     gql = """
     query ($item_id: ID!) {
       items(ids: [$item_id]) {
@@ -166,10 +169,11 @@ def item_exists(item_id: str) -> bool:
         data = query(gql, {"item_id": item_id})
         items = data.get("items", [])
         if not items:
-            return False
+            return False  # confirmed not found
         return items[0].get("state", "") == "active"
-    except Exception:
-        return False
+    except Exception as e:
+        print(f"  [warn] Could not verify item {item_id}: {e}")
+        return None  # unknown — don't reset
 
 
 def update_item_column_values(item_id: str, column_values: dict, board_id: str = None) -> str:
