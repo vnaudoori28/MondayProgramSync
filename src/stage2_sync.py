@@ -238,15 +238,27 @@ def sync_program(
                 sm.full_reset(program_item_id)
         else:
             print(f"  Sprint item {sprint_item_id} confirmed active")
+    # Auto-clean state for categories that are no longer active
+    # So if they become active again later, they get pushed fresh
+    if already_pushed and not dry_run:
+        reverted = [c for c in already_pushed if c not in active_categories]
+        if reverted:
+            print(f"  [auto-clean] {reverted} are now NA — removing from pushed state")
+            sm.remove_categories(program_item_id, reverted)
+            already_pushed = sm.get_pushed_categories(program_item_id)
+
     new_categories = [c for c in active_categories if c not in already_pushed]
 
-    # Self-healing: verify sub-tasks actually exist in Monday
+    # Self-healing: only re-push categories that are BOTH missing AND still active
     if already_pushed and sprint_item_id:
         try:
             existing = mc.get_subitems(sprint_item_id)
             existing_names = {sub["name"] for sub in existing}
             missing_categories = []
             for category in already_pushed:
+                if category not in active_categories:
+                    print(f"  [warn] {category} was pushed but is now NA — skipping re-heal")
+                    continue
                 config = TASKS_CONFIG.get(category)
                 if not config:
                     continue
