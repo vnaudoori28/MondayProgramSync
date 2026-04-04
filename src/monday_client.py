@@ -130,6 +130,28 @@ def get_subitems(parent_item_id: str) -> list:
     return items[0].get("subitems", [])
 
 
+def find_item_by_name(board_id: str, group_id: str, item_name: str) -> str | None:
+    """Search for an existing item by name in a specific board group."""
+    gql = """
+    query ($board_id: ID!, $item_name: String!) {
+      boards(ids: [$board_id]) {
+        items_page(limit: 100, query_params: {rules: [{column_id: "name", compare_value: [$item_name]}]}) {
+          items { id name group { id } }
+        }
+      }
+    }
+    """
+    try:
+        data = query(gql, {"board_id": board_id, "item_name": item_name})
+        items = data["boards"][0]["items_page"]["items"]
+        for item in items:
+            if item["name"] == item_name and item["group"]["id"] == group_id:
+                return item["id"]
+    except Exception as e:
+        print(f"  [warn] Could not search for existing sprint item: {e}")
+    return None
+
+
 def assign_person_to_item(item_id: str, board_id: str, user_id: str):
     """Assign a person to an item using the correct mutation for people columns."""
     gql = """
