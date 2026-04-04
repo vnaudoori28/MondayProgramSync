@@ -313,16 +313,24 @@ def sync_program(
 
     # Create parent sprint item if not yet created
     if not sprint_item_id:
-        print(f"  Creating sprint item...")
-        if not dry_run:
-            sprint_item_id = mc.create_item(
-                board_id=sprint_board_id,
-                group_id=sprint_group_id,
-                item_name=program_name
-            )
+        # First check if item already exists in Monday (prevents duplicates after reset)
+        existing_id = mc.find_item_by_name(sprint_board_id, sprint_group_id, program_name)
+        if existing_id:
+            print(f"  Found existing sprint item: {existing_id} — reusing")
+            sprint_item_id = existing_id
+            if not dry_run:
+                sm.record_push(program_item_id, sprint_item_id, [])
         else:
-            sprint_item_id = "DRY_RUN_ITEM"
-        print(f"  Sprint item: {sprint_item_id}")
+            print(f"  Creating sprint item...")
+            if not dry_run:
+                sprint_item_id = mc.create_item(
+                    board_id=sprint_board_id,
+                    group_id=sprint_group_id,
+                    item_name=program_name
+                )
+            else:
+                sprint_item_id = "DRY_RUN_ITEM"
+            print(f"  Sprint item: {sprint_item_id}")
 
     # Smart patch: update dates/owner on already-pushed sub-tasks
     if already_pushed and sprint_item_id and sprint_item_id != "DRY_RUN_ITEM":
