@@ -154,6 +154,23 @@ def patch_existing_subitems(
     print(f"  Patched {patched} existing sub-tasks")
 
 
+def is_due_within_window(due_date_str: str | None, days: int = 14) -> bool:
+    """
+    Returns True if the due date falls within the next N days from today.
+    Tasks with no due date are always created (can't calculate window).
+    Tasks overdue (past due) are also created — they need immediate attention.
+    """
+    if not due_date_str:
+        return True  # no due date — create it, better to have it than not
+    try:
+        from datetime import timedelta
+        due = date.fromisoformat(due_date_str)
+        today = date.today()
+        return due <= today + timedelta(days=days)
+    except ValueError:
+        return True  # unparseable date — create it
+
+
 def push_new_subitems(
     sprint_item_id: str,
     categories: list[str],
@@ -161,7 +178,11 @@ def push_new_subitems(
     owner_id: str | None,
     dry_run: bool
 ) -> list[str]:
-    """Create sub-tasks for each category, skipping duplicates by name."""
+    """
+    Create sub-tasks for each category, skipping duplicates by name.
+    Only creates tasks due within the next 14 days — deferred tasks are
+    logged and will be picked up automatically on future daily runs.
+    """
     print(f"  Fetching existing sub-tasks to check for duplicates...")
     try:
         existing = mc.get_subitems(sprint_item_id)
@@ -178,9 +199,11 @@ def push_new_subitems(
             continue
 
         tasks = calculate_all_task_dates(config["tasks"], program_dates)
-        print(f"  Creating {len(tasks)} sub-tasks for: {category}")
+        due_soon = [t for t in tasks if is_due_within_window(t.get("due_date"))]
+        deferred = len(tasks) - len(due_soon)
+        print(f"  Creating {len(due_soon)} sub-tasks for: {category} ({deferred} deferred — not due within 14 days)")
 
-        for task in tasks:
+        for task in due_soon:
             name = build_subitem_name(category, task["name"])
             if name in existing_names:
                 print(f"    [skip duplicate] {name[:70]}")
@@ -208,7 +231,14 @@ def push_new_subitems(
                             print(f"      [warn] Could not assign owner: {e}")
             existing_names.add(name)
 
-        pushed_categories.append(category)
+        all_tasks = calculate_all_task_dates(config["tasks"], program_dates)
+        all_pushed = all(is_due_within_window(t.get("due_date")) or
+                        build_subitem_name(category, t["name"]) in existing_names
+                        for t in all_tasks)
+        if all_pushed:
+            pushed_categories.append(category)
+        else:
+            print(f"  [defer] {category} has future tasks — will re-check on next run")
 
     return pushed_categories
 
