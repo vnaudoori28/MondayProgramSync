@@ -139,11 +139,14 @@ def patch_existing_subitems(
                 continue
             print(f"    ~ patch: {name[:70]} | due: {due_date}")
             if not dry_run:
-                mc.update_item_column_values(
-                    subitem["id"],
-                    {COL_DUE_DATE: {"date": due_date}},
-                    board_id=subitem["board_id"]
-                )
+                try:
+                    mc.update_item_column_values(
+                        subitem["id"],
+                        {COL_DUE_DATE: {"date": due_date}},
+                        board_id=subitem["board_id"]
+                    )
+                except Exception as e:
+                    print(f"      [warn] Could not patch due date: {e}")
                 if owner_id:
                     try:
                         mc.assign_person_to_item(subitem["id"], subitem["board_id"], owner_id)
