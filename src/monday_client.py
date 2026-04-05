@@ -153,25 +153,10 @@ def find_item_by_name(board_id: str, group_id: str, item_name: str) -> str | Non
 
 
 def assign_person_to_item(item_id: str, board_id: str, user_id: str):
-    """Assign a person to an item using the correct mutation for people columns."""
+    """Assign a person to an item using change_multiple_column_values."""
     import json
-    gql = """
-    mutation ($item_id: ID!, $board_id: ID!, $value: JSON!) {
-      change_column_value(
-        item_id: $item_id
-        board_id: $board_id
-        column_id: "person"
-        value: $value
-      ) { id }
-    }
-    """
-    user_value = json.dumps({"personsAndTeams": [{"id": int(user_id), "kind": "person"}]})
-    data = query(gql, {
-        "item_id": item_id,
-        "board_id": board_id,
-        "value": user_value
-    })
-    return data["change_column_value"]["id"]
+    col = {"person": {"personsAndTeams": [{"id": int(user_id), "kind": "person"}]}}
+    return update_item_column_values(item_id, col, board_id=board_id)
 
 
 def item_exists(item_id: str) -> bool | None:
