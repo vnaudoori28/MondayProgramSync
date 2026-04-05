@@ -219,11 +219,14 @@ def push_new_subitems(
                 )
                 if new_id:
                     if due_date:
-                        mc.update_item_column_values(
-                            new_id,
-                            {COL_DUE_DATE: {"date": due_date}},
-                            board_id=subitem_board_id
-                        )
+                        try:
+                            mc.update_item_column_values(
+                                new_id,
+                                {COL_DUE_DATE: {"date": due_date}},
+                                board_id=subitem_board_id
+                            )
+                        except Exception as e:
+                            print(f"      [warn] Could not set due date {due_date}: {e}")
                     if owner_id:
                         try:
                             mc.assign_person_to_item(new_id, subitem_board_id, owner_id)
