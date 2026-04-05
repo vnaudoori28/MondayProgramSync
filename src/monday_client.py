@@ -106,7 +106,23 @@ def create_subitem(parent_item_id: str, subitem_name: str) -> tuple[str, str]:
         "item_name": subitem_name,
     })
     subitem = data["create_subitem"]
-    return subitem["id"], subitem["board"]["id"]
+    subitem_id = subitem["id"]
+    board_id = subitem.get("board", {}).get("id")
+
+    # If board_id is null, fetch it separately
+    if not board_id:
+        try:
+            gql2 = """
+            query ($item_id: ID!) {
+              items(ids: [$item_id]) { board { id } }
+            }
+            """
+            d2 = query(gql2, {"item_id": subitem_id})
+            board_id = d2["items"][0]["board"]["id"]
+        except Exception as e:
+            print(f"  [warn] Could not fetch subitem board_id: {e}")
+
+    return subitem_id, board_id
 
 
 def get_subitems(parent_item_id: str) -> list:
@@ -117,7 +133,6 @@ def get_subitems(parent_item_id: str) -> list:
         subitems {
           id
           name
-          board { id }
           column_values { id text value }
         }
       }
@@ -127,7 +142,28 @@ def get_subitems(parent_item_id: str) -> list:
     items = data.get("items", [])
     if not items:
         return []
-    return items[0].get("subitems", [])
+    subitems = items[0].get("subitems", [])
+    if not subitems:
+        return []
+
+    # Fetch board_id for subitems via separate query
+    subitem_ids = [s["id"] for s in subitems]
+    try:
+        gql2 = """
+        query ($ids: [ID!]!) {
+          items(ids: $ids) { id board { id } }
+        }
+        """
+        d2 = query(gql2, {"ids": subitem_ids})
+        board_map = {i["id"]: i["board"]["id"] for i in d2.get("items", [])}
+        for s in subitems:
+            s["board"] = {"id": board_map.get(s["id"])}
+    except Exception as e:
+        print(f"  [warn] Could not fetch subitem board IDs: {e}")
+        for s in subitems:
+            s["board"] = {"id": None}
+
+    return subitems
 
 
 def find_item_by_name(board_id: str, group_id: str, item_name: str) -> str | None:
