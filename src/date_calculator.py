@@ -10,23 +10,23 @@ ANCHOR_SYMBOLS = {
     "PE": "program_end_date",
 }
 
-RULE_PATTERN = re.compile(r"^(PE|R|S|C|P)([+-])(\d+)$")
+RULE_PATTERN = re.compile(r"^(PE|R|S|C|P)([+-]\d+)?$")
 
 
 def parse_rule(rule: str) -> tuple[str, int]:
     """
-    Parse a rule string like 'C+1', 'P-15', 'PE+3' into (anchor_key, offset_days).
-    anchor_key matches keys in program_dates dict.
-    offset_days is positive (after) or negative (before) the anchor.
+    Parse a rule string like 'C+1', 'P-15', 'PE+3', or bare 'R', 'C', 'P'
+    into (anchor_key, offset_days).
     """
     rule = rule.strip()
     match = RULE_PATTERN.match(rule)
     if not match:
-        raise ValueError(f"Cannot parse date rule: '{rule}'. Expected format like C+1, P-15, PE+3")
+        raise ValueError(f"Cannot parse date rule: '{rule}'. Expected format like C+1, P-15, R, C")
 
-    symbol, sign, days = match.groups()
+    symbol = match.group(1)
+    offset_str = match.group(2)  # e.g. "+1", "-15", or None for bare anchors
     anchor_key = ANCHOR_SYMBOLS[symbol]
-    offset = int(days) if sign == "+" else -int(days)
+    offset = int(offset_str) if offset_str else 0
     return anchor_key, offset
 
 
