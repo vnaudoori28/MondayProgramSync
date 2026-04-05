@@ -154,22 +154,22 @@ def find_item_by_name(board_id: str, group_id: str, item_name: str) -> str | Non
 
 def assign_person_to_item(item_id: str, board_id: str, user_id: str):
     """Assign a person to an item using the correct mutation for people columns."""
+    import json
     gql = """
-    mutation ($item_id: ID!, $board_id: ID!, $user_id: String!) {
+    mutation ($item_id: ID!, $board_id: ID!, $value: JSON!) {
       change_column_value(
         item_id: $item_id
         board_id: $board_id
         column_id: "person"
-        value: $user_id
+        value: $value
       ) { id }
     }
     """
-    import json
     user_value = json.dumps({"personsAndTeams": [{"id": int(user_id), "kind": "person"}]})
     data = query(gql, {
         "item_id": item_id,
         "board_id": board_id,
-        "user_id": user_value
+        "value": user_value
     })
     return data["change_column_value"]["id"]
 
