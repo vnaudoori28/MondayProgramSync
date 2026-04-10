@@ -1,6 +1,18 @@
 {
+  "11667543660": {
+    "sprint_item_id": "11673399451",
+    "pushed_categories": [
+      "Flights",
+      "General - Proposals",
+      "General - Verification",
+      "Guides",
+      "Hotels",
+      "Transport"
+    ],
+    "last_synced": "2026-04-10"
+  },
   "11658179064": {
-    "sprint_item_id": "11673399198",
+    "sprint_item_id": "11717228087",
     "pushed_categories": [
       "Flights",
       "General - Proposals",
@@ -11,17 +23,6 @@
       "Trains",
       "Transport"
     ],
-    "last_synced": "2026-04-05"
-  },
-  "11667543660": {
-    "sprint_item_id": "11673399451",
-    "pushed_categories": [
-      "General - Proposals",
-      "General - Verification",
-      "Hotels",
-      "Meetings",
-      "Transport"
-    ],
-    "last_synced": "2026-04-05"
+    "last_synced": "2026-04-10"
   }
 }
