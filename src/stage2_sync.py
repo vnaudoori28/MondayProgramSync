@@ -26,7 +26,7 @@ TASKS_CONFIG = json.load(open(
     os.path.join(os.path.dirname(__file__), "..", "config", "tasks.json")
 ))
 
-NA_VALUES = {"na", "n/a", "", "none"}
+NA_VALUES = {"na", "n/a", "", "none", "not applicable", "blank"}
 
 # Sub-item column IDs (confirmed from Sprint Board)
 COL_DUE_DATE  = "date0"
