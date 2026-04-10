@@ -24,8 +24,6 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -34,6 +32,14 @@ jobs:
 
       - name: Install dependencies
         run: pip install -r requirements.txt
+
+      - name: Restore pushed state
+        id: cache-state
+        uses: actions/cache/restore@v4
+        with:
+          path: state/pushed_state.json
+          key: pushed-state-latest
+          restore-keys: pushed-state-
 
       - name: Reset state for specific program (optional)
         if: ${{ github.event.inputs.reset_item_id != '' }}
@@ -59,17 +65,17 @@ jobs:
             python src/main.py
           fi
 
-      - name: Commit updated state
+      - name: Delete old cache
         if: ${{ github.event.inputs.dry_run != 'true' }}
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add state/pushed_state.json
-          if git diff --staged --quiet; then
-            echo "No state changes to commit"
-          else
-            git commit -m "chore: update pushed state [skip ci]"
-            git fetch origin main
-            git rebase origin/main
-            git push origin main
-          fi
+          gh extension install actions/gh-actions-cache 2>/dev/null || true
+          gh actions-cache delete pushed-state-latest --confirm 2>/dev/null || true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Save pushed state
+        if: ${{ github.event.inputs.dry_run != 'true' }}
+        uses: actions/cache/save@v4
+        with:
+          path: state/pushed_state.json
+          key: pushed-state-latest
