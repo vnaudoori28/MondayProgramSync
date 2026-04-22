@@ -5,45 +5,59 @@ from datetime import date, timedelta
 ANCHOR_SYMBOLS = {
     "R": "rfp_date",
     "S": "submission_date",
+    "W": "win_date",
     "C": "confirmation_date",
     "P": "program_start_date",
     "PE": "program_end_date",
 }
 
-RULE_PATTERN = re.compile(r"^(PE|R|S|C|P)([+-])(\d+)$")
+RULE_PATTERN = re.compile(r"^(PE|W|R|S|C|P)([+-]\d+)?$")
+
+
+def add_working_days(start: date, days: int) -> date:
+    """
+    Add or subtract working days (Mon-Fri) from a date.
+    Positive days = forward, negative days = backward.
+    Weekends are skipped entirely.
+    """
+    if days == 0:
+        return start
+    direction = 1 if days > 0 else -1
+    remaining = abs(days)
+    current = start
+    while remaining > 0:
+        current += timedelta(days=direction)
+        if current.weekday() < 5:  # Mon=0 ... Fri=4
+            remaining -= 1
+    return current
 
 
 def parse_rule(rule: str) -> tuple[str, int]:
     """
-    Parse a rule string like 'C+1', 'P-15', 'PE+3' into (anchor_key, offset_days).
-    anchor_key matches keys in program_dates dict.
-    offset_days is positive (after) or negative (before) the anchor.
+    Parse a rule string like 'W+1', 'C+3', 'P-10', 'PE+5', or bare 'C', 'P'
+    into (anchor_key, offset_working_days).
+    All offsets are working days (Mon-Fri).
     """
     rule = rule.strip()
     match = RULE_PATTERN.match(rule)
     if not match:
-        raise ValueError(f"Cannot parse date rule: '{rule}'. Expected format like C+1, P-15, PE+3")
+        raise ValueError(f"Cannot parse date rule: '{rule}'. Expected format like W+1, C+3, P-10")
 
-    symbol, sign, days = match.groups()
+    symbol = match.group(1)
+    offset_str = match.group(2)
     anchor_key = ANCHOR_SYMBOLS[symbol]
-    offset = int(days) if sign == "+" else -int(days)
+    offset = int(offset_str) if offset_str else 0
     return anchor_key, offset
 
 
 def calculate_due_date(rule: str, program_dates: dict) -> date | None:
     """
     Given a rule string and a dict of program dates, return the calculated due date.
+    All offsets are working days.
 
-    program_dates should contain any relevant keys from ANCHOR_SYMBOLS values:
-    {
-        "rfp_date": date(...),
-        "submission_date": date(...),
-        "confirmation_date": date(...),   # C
-        "program_start_date": date(...),  # P
-        "program_end_date": date(...),    # PE
-    }
-
-    Returns None if the required anchor date is not available.
+    program_dates keys:
+        rfp_date, submission_date, win_date, confirmation_date,
+        program_start_date, program_end_date
     """
     anchor_key, offset = parse_rule(rule)
     anchor_date = program_dates.get(anchor_key)
@@ -54,14 +68,13 @@ def calculate_due_date(rule: str, program_dates: dict) -> date | None:
     if isinstance(anchor_date, str):
         anchor_date = date.fromisoformat(anchor_date)
 
-    return anchor_date + timedelta(days=offset)
+    return add_working_days(anchor_date, offset)
 
 
 def calculate_all_task_dates(tasks: list[dict], program_dates: dict) -> list[dict]:
     """
     Given a list of task dicts (each with a 'rule' key) and program_dates,
     return the same list with 'due_date' added to each task.
-    Tasks where the anchor date is missing get due_date=None.
     """
     result = []
     for task in tasks:
@@ -80,25 +93,12 @@ def calculate_all_task_dates(tasks: list[dict], program_dates: dict) -> list[dic
 def read_legend_from_excel(excel_path: str) -> dict:
     """
     Read anchor dates from the Legend sheet of a program Excel file.
-
-    Expects rows like:
-        Symbol | Meaning | Date | Notes | Milestone
-        R      | ...     | 2025-08-01 | ...
-        C      | ...     | 2025-09-01 | ...
-        P      | ...     | 2025-12-01 | ...
-
-    Returns a dict with keys matching ANCHOR_SYMBOLS values, e.g.:
-    {
-        "rfp_date": date(2025, 8, 1),
-        "confirmation_date": date(2025, 9, 1),
-        "program_start_date": date(2025, 12, 1),
-        ...
-    }
+    Returns dict with keys matching ANCHOR_SYMBOLS values.
     """
     try:
         import pandas as pd
     except ImportError:
-        raise ImportError("pandas is required to read Excel files: pip install pandas openpyxl")
+        raise ImportError("pandas is required: pip install pandas openpyxl")
 
     df = pd.read_excel(excel_path, sheet_name="Legend", header=None)
 
@@ -115,7 +115,6 @@ def read_legend_from_excel(excel_path: str) -> dict:
         anchor_key = ANCHOR_SYMBOLS[symbol]
         try:
             if hasattr(raw_date, "date"):
-                # pandas Timestamp
                 dates[anchor_key] = raw_date.date()
             else:
                 dates[anchor_key] = date.fromisoformat(str(raw_date)[:10])
